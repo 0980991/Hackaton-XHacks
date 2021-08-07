@@ -9,9 +9,16 @@ from dotenv import load_dotenv
 
 import newsapi as na
 
+import datetime as dt
+
 import UIFunctions as ui
 
 import userProfile
+
+from discord.ext import tasks, commands
+
+from discord.utils import get
+
 db = userProfile.userDatabase()
 
 load_dotenv()
@@ -96,7 +103,7 @@ class CustomClient(discord.Client):
                     return
 
                 elif int(msg.content) == 3:
-                    await message.channel.send("How often would you like to receive your mail? \nEvery: 1h, 3h, 6h, 12h, 24h, 48h, 72h, 168h")
+                    await message.channel.send("How often would you like to receive your mail? \nEvery: 1h, 3h, 6h, 12h, 24h")
                     msg = await client.wait_for('message')
                     if userprofile.setInterval(msg.content):
                         await message.channel.send("Preference updated!")
@@ -104,10 +111,42 @@ class CustomClient(discord.Client):
                     else:
                         await message.channel.send("Invalid input.")
 
-
+        if message.content == '!automail':
+            userprofile.receiveAutoMail = not userprofile.receiveAutoMail
+            db.editUser(userprofile)
+            await message.channel.send(f"Your automail preference has been set to {userprofile.receiveAutoMail}")
+            return
 
         if message.content == '!dn':
             await message.channel.send('D33Z NUT5')
+
+        if message.content == '!mass':
+            await self.sendMassMail()
+
+    @tasks.loop(seconds=3600.0)
+    async def sendMassMail(self):
+        currentHour = dt.datetime.now().hour
+        print(currentHour % 12)
+        users = db.getAllUsers()
+        for user in users:
+            userOnDiscord = await self.fetch_user(str(user.id))
+            if user.receiveAutoMail == True:
+                if user.interval == "3h":
+                    if currentHour % 3 != 0:
+                        continue
+                elif user.interval == "6h":
+                    if currentHour % 6 != 0:
+                        continue
+                elif user.interval == "12h":
+                    if currentHour % 12 != 0:
+                        continue
+                elif user.interval == "24h":
+                    if currentHour % 24 != 12:
+                        continue
+                articlelist = self.getNews(user.amountOfNews, user.interests, user)
+                for article in articlelist:
+                    await userOnDiscord.send(article)
+
 
     def handleUserId(self, id):
         return db.loadUser(id)
@@ -144,4 +183,5 @@ class CustomClient(discord.Client):
         return newstring
 
 client = CustomClient()
+client.sendMassMail.start()
 client.run(TOKEN)

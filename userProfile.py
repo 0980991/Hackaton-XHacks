@@ -3,11 +3,12 @@ import os
 
 class userProfile:
     # Only pass ID to create new user, pass everything to load one from json
-    def __init__(self, id, interests=[], interval='24h', amountOfNews=5):
+    def __init__(self, id, interests=[], interval='24h', amountOfNews=5, receiveAutoMail=False):
         self.id = id
         self.interests = interests
         self.interval = interval
         self.amountOfNews = amountOfNews
+        self.receiveAutoMail = receiveAutoMail
 
     def addInterest(self, interest):
         self.interests.append(interest)
@@ -19,7 +20,7 @@ class userProfile:
         return
     
     def setInterval(self, interval):
-        intervals = ["1h", "3h", "6h", "12h", "24h", "48h", "72h", "168h"]
+        intervals = ["1h", "3h", "6h", "12h", "24h"]
         if interval in intervals:
             self.interval = interval
             return True
@@ -45,6 +46,12 @@ class userDatabase:
         self.writeUser(user)
         return user
 
+    def getAllUsers(self):
+        users = []
+        for id in self.jsonRead.keys():
+            users.append(self.getUser(id))
+        return users
+
     def loadUser(self, id):
         if self.doesUserExist(id):
             return self.getUser(id)
@@ -62,11 +69,12 @@ class userDatabase:
         return False
 
     def writeUser(self, user):
-        self.jsonRead[user.id] = {
+        self.jsonRead[str(user.id)] = {
             'id': user.id,
             'interests': user.interests,
             'interval': user.interval,
-            'amountOfNews': user.amountOfNews
+            'amountOfNews': user.amountOfNews,
+            'receiveAutoMail': user.receiveAutoMail
         }
         with open(self.jsonFile, 'w') as outputFile:
             json.dump(self.jsonRead, outputFile)
@@ -76,6 +84,6 @@ class userDatabase:
     # Creates user profile based on json contents
     def getUser(self, userId):
         if str(userId) in self.jsonRead.keys():
-            return userProfile(userId, self.jsonRead[str(userId)]["interests"], self.jsonRead[str(userId)]["interval"], self.jsonRead[str(userId)]["amountOfNews"])
+            return userProfile(userId, self.jsonRead[str(userId)]["interests"], self.jsonRead[str(userId)]["interval"], self.jsonRead[str(userId)]["amountOfNews"], self.jsonRead[str(userId)]["receiveAutoMail"])
 
 
