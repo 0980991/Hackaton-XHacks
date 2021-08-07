@@ -1,4 +1,5 @@
 import json
+import os
 
 class userProfile:
     # Only pass ID to create new user, pass everything to load one from json
@@ -33,7 +34,10 @@ class userProfile:
 class userDatabase:
     def __init__(self):
         self.jsonFile = './userProfiles.json'
-        self.json = json.loads(open(self.jsonFile, 'r'))
+        if not os.path.isfile(self.jsonFile):
+            json.dump({}, open(self.jsonFile, 'w'))
+        self.jsonRead = json.loads(open(self.jsonFile, 'r').read())
+        
 
     # Creates a new user with the default values and writes it to the JSON file
     def createUser(self, id):
@@ -53,22 +57,25 @@ class userDatabase:
         return
 
     def doesUserExist(self, id):
-        if id in self.json:
+        if id in self.jsonRead:
             return True
         return False
 
     def writeUser(self, user):
-        self.json[user.id] = {
+        self.jsonRead[user.id] = {
             'id': user.id,
             'interests': user.interests,
             'interval': user.interval,
             'amountOfNews': user.amountOfNews
         }
+        with open(self.jsonFile, 'w') as outputFile:
+            json.dump(self.jsonRead, outputFile)
+            outputFile.close()
         return
 
     # Creates user profile based on json contents
     def getUser(self, userId):
-        if userId in self.json:
-            return userProfile(userId, self.json["interests"], self.json["interval"], self.json["amountOfNews"])
+        if userId in self.jsonRead:
+            return userProfile(userId, self.jsonRead[userId]["interests"], self.jsonRead[userId]["interval"], self.jsonRead[userId]["amountOfNews"])
 
 

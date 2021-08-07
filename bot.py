@@ -7,6 +7,10 @@ from dotenv import load_dotenv
 
 import newsapi as na
 
+import userProfile
+
+db = userProfile.userDatabase()
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -18,8 +22,10 @@ class CustomClient(discord.Client):
     async def on_message(self, message):
         if message.author == client.user:
             return
+        else:
+            userprofile = self.handleUserId(message.author.id)
         if message.content == '!helloworld':
-            await message.channel.send('Hello, world!')
+            await message.channel.send(f'Hello, world! {userprofile.id}')
         if message.content == '!qt':
             if message.reference != NULL:
                 message = await message.channel.fetch_message(message.reference.message_id)
@@ -31,6 +37,8 @@ class CustomClient(discord.Client):
         if message.content == '!dn':
             await message.channel.send('D33Z NUT5')
 
+    def handleUserId(self, id):
+        return db.loadUser(id)
 
     def getNews(self):
         key = os.getenv('NEWSAPI_KEY')
