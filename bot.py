@@ -98,13 +98,6 @@ class CustomClient(discord.Client):
                     await message.channel.send("FILLER TEXT")
                     pass
 
-
-
-#        if message.content == '!whatsnew':
-#            articlelist = self.getNews()
-#            for article in articlelist:
-#                await message.channel.send(article)
-
         if message.content == '!dn':
             await message.channel.send('D33Z NUT5')
 
