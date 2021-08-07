@@ -33,7 +33,7 @@ class CustomClient(discord.Client):
             articlelist = self.getNews(userprofile.amountOfNews, userprofile.interests, userprofile)
             await message.channel.send("Your news:")
             for article in articlelist:
-                await message.channel.send(article)
+                await message.author.send(article)
 
         if message.content == '!helloworld':
             await message.channel.send(f'Hello, world! {userprofile.id}')
