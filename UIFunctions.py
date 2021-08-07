@@ -1,5 +1,5 @@
 def formatArticle(article, i):
-    retstring = f'{i+1}\t{article["title"]}\n\t\t{formatDescription(article["description"])}'
+    retstring = f'**{i+1}\t{article["title"]}**\n\t\t{formatDescription(article["description"])}'
     retstring += f'\n\tLink: {article["url"]}'
 
     return retstring

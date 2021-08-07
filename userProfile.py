@@ -57,7 +57,7 @@ class userDatabase:
         return
 
     def doesUserExist(self, id):
-        if id in self.jsonRead:
+        if str(id) in self.jsonRead.keys():
             return True
         return False
 
@@ -75,7 +75,7 @@ class userDatabase:
 
     # Creates user profile based on json contents
     def getUser(self, userId):
-        if userId in self.jsonRead:
-            return userProfile(userId, self.jsonRead[userId]["interests"], self.jsonRead[userId]["interval"], self.jsonRead[userId]["amountOfNews"])
+        if str(userId) in self.jsonRead.keys():
+            return userProfile(userId, self.jsonRead[str(userId)]["interests"], self.jsonRead[str(userId)]["interval"], self.jsonRead[str(userId)]["amountOfNews"])
 
 

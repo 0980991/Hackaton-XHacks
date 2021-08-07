@@ -29,9 +29,8 @@ class CustomClient(discord.Client):
             userprofile = self.handleUserId(message.author.id)
 
         if message.content == '!whatsnew':
-            await message.channel.send("amount of articles: " + str(userprofile.amountOfNews))
             articlelist = self.getNews(userprofile.amountOfNews, userprofile.interests, userprofile)
-            await message.channel.send("Your news:")
+            await message.channel.send("Your news has been mailed to your inbox")
             for article in articlelist:
                 await message.author.send(article)
 
@@ -64,7 +63,7 @@ class CustomClient(discord.Client):
                         while msg.author != message.author:
                             msg = await client.wait_for('message')
                         userprofile.addInterest(msg.content)
-                        db.writeUser(userprofile)
+                        db.editUser(userprofile)
                         await message.channel.send("Category added!")
 
                     else:
@@ -77,7 +76,7 @@ class CustomClient(discord.Client):
                                 msg = await client.wait_for('message')
                             if msg.content in userprofile.interests:
                                 userprofile.removeInterest(msg.content)
-                                db.writeUser(userprofile)
+                                db.editUser(userprofile)
                                 await message.channel.send(f'Category removed!')
                             else:
                                 await message.channel.send(f'Category not found.')
@@ -113,7 +112,6 @@ class CustomClient(discord.Client):
 
         retlist = []
         articles = data
-        print(articles)
         for i in range(userprofile.amountOfNews):
             retlist.append(ui.formatArticle(random.choice(articles)['articles'][i], i))
 
