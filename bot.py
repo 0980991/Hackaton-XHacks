@@ -1,26 +1,18 @@
 # bot.py
 from asyncio.windows_events import NULL
 import os
-
 import random
-
 import discord
 from dotenv import load_dotenv
-
 import newsapi as na
-
 import datetime as dt
-
 import UIFunctions as ui
-
 import userProfile
-
 from discord.ext import tasks, commands
-
 from discord.utils import get
 
-db = userProfile.userDatabase()
 
+db = userProfile.userDatabase()
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
