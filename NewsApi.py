@@ -1,19 +1,20 @@
 import requests
 import newsapi as na
 import datetime as dt
-import pandas as pd
+import UIFunctions as ui
 
 
 class NewsAPI():
     def getNews(self):
         key = '4f4ed8ca60dd4d53bbf8714662fb1d0e'
         newsapi = na.NewsApiClient(api_key=key)
-        data = newsapi.get_everything(q='bbc-news', language='en', page_size=20)
+        data = newsapi.get_everything(q='politics', language='en', page_size=5)
 
 
         articles = data['articles']
         for i, article in enumerate(articles):
-            print(f'{i}\t{article["title"]}')
+            ui.formatArticle(article, i)
+
 
 
 

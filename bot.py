@@ -7,9 +7,13 @@ from dotenv import load_dotenv
 
 import newsapi as na
 
+<<<<<<< Updated upstream
 import userProfile
 
 db = userProfile.userDatabase()
+=======
+import uifunctions as ui
+>>>>>>> Stashed changes
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -43,13 +47,12 @@ class CustomClient(discord.Client):
     def getNews(self):
         key = os.getenv('NEWSAPI_KEY')
         newsapi = na.NewsApiClient(api_key=key)
-        data = newsapi.get_everything(q='bbc-news', language='en', page_size=2)
+        data = newsapi.get_everything(q='politics', language='en', page_size=5)
 
-        retlist = []
+
         articles = data['articles']
         for i, article in enumerate(articles):
-            retlist.append(f'{i+1}\t{article["title"]} {article["url"]}\t\n')
-        return retlist
+            ui.formatArticle(article, i)
 
     def ruinSentence(self, string):
         string = string.capitalize()
