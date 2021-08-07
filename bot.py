@@ -9,6 +9,9 @@ import newsapi as na
 
 import UIFunctions as ui
 
+import userProfile
+db = userProfile.userDatabase()
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
