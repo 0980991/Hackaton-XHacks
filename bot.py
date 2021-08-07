@@ -21,10 +21,6 @@ class CustomClient(discord.Client):
         print(f'{self.guilds}')
 
     async def on_message(self, message):
-        if message.content == '!whatsnew':
-            articlelist = self.getNews()
-            for article in articlelist:
-                await message.channel.send(article)
         if message.author == client.user:
             return
         else:
@@ -36,7 +32,7 @@ class CustomClient(discord.Client):
                 message = await message.channel.fetch_message(message.reference.message_id)
                 await message.channel.send(self.ruinSentence(message.content))
         if message.content == '!whatsnew':
-            articlelist = self.getNews()
+            articlelist = self.getNews(userprofile.amountOfNews, userprofile.interests[0])
             for article in articlelist:
                 await message.channel.send(article)
         if message.content == '!dn':
@@ -45,10 +41,10 @@ class CustomClient(discord.Client):
     def handleUserId(self, id):
         return db.loadUser(id)
 
-    def getNews(self):
+    def getNews(self, pagesize, interest):
         key = os.getenv('NEWSAPI_KEY')
         newsapi = na.NewsApiClient(api_key=key)
-        data = newsapi.get_everything(q='politics', language='en', page_size=5)
+        data = newsapi.get_everything(q=interest, language='en', page_size=userprofile.amountOfNews)
 
         retlist = []
         articles = data['articles']
@@ -71,6 +67,6 @@ class CustomClient(discord.Client):
                 newstring += char.upper()
 
         return newstring
-        
+
 client = CustomClient()
 client.run(TOKEN)
