@@ -91,8 +91,15 @@ class CustomClient(discord.Client):
 
                     pass
                 elif int(msg.content) == 2:
-                    await message.channel.send("FILLER TEXT")
-                    pass
+                    await message.channel.send("How many mails would you like to receive per delivery? (1-20)")
+                    msg = await client.wait_for('message')
+                    while msg.author != message.author and int(msg.content) in range(1,20):
+                        msg = await client.wait_for('message')
+                    userprofile.setAmountOfNews(int(msg.content))
+                    db.editUser(userprofile)
+                    await message.channel.send("News amount updated!")
+                    return
+
                 elif int(msg.content == 3):
                     await message.channel.send("FILLER TEXT")
                     pass
@@ -107,7 +114,8 @@ class CustomClient(discord.Client):
         key = os.getenv('NEWSAPI_KEY')
         newsapi = na.NewsApiClient(api_key=key)
         data = []
-        for interest in interests:
+        for i in range(len(interests)):
+            interest = interests[i%len(interests)]
             data.append(newsapi.get_everything(q=interest, language='en', page_size=userprofile.amountOfNews))
 
         retlist = []
