@@ -81,15 +81,10 @@ class CustomClient(discord.Client):
                             else:
                                 await message.channel.send(f'Category not found.')
 
-
                         else:
                             await message.channel.send(f'You have no categories')
                             return
 
-
-                    
-
-                    pass
                 elif int(msg.content) == 2:
                     await message.channel.send("How many mails would you like to receive per delivery? (1-20)")
                     msg = await client.wait_for('message')
@@ -100,9 +95,16 @@ class CustomClient(discord.Client):
                     await message.channel.send("News amount updated!")
                     return
 
-                elif int(msg.content == 3):
-                    await message.channel.send("FILLER TEXT")
-                    pass
+                elif int(msg.content) == 3:
+                    await message.channel.send("How often would you like to receive your mail? \nEvery: 1h, 3h, 6h, 12h, 24h, 48h, 72h, 168h")
+                    msg = await client.wait_for('message')
+                    if userprofile.setInterval(msg.content):
+                        await message.channel.send("Preference updated!")
+                        db.editUser(userprofile)
+                    else:
+                        await message.channel.send("Invalid input.")
+
+
 
         if message.content == '!dn':
             await message.channel.send('D33Z NUT5')
