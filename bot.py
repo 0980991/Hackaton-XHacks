@@ -70,10 +70,10 @@ class CustomClient(discord.Client):
     def handleUserId(self, id):
         return db.loadUser(id)
 
-    def getNews(self):
+    def getNews(self, pagesize, interest):
         key = os.getenv('NEWSAPI_KEY')
         newsapi = na.NewsApiClient(api_key=key)
-        data = newsapi.get_everything(q='politics', language='en', page_size=5)
+        data = newsapi.get_everything(q=interest, language='en', page_size=userprofile.amountOfNews)
 
         retlist = []
         articles = data['articles']
@@ -97,6 +97,6 @@ class CustomClient(discord.Client):
                 newstring += char.upper()
 
         return newstring
-        
+
 client = CustomClient()
 client.run(TOKEN)
