@@ -21,24 +21,49 @@ class CustomClient(discord.Client):
         print(f'{self.guilds}')
 
     async def on_message(self, message):
-        if message.content == '!whatsnew':
-            articlelist = self.getNews()
-            for article in articlelist:
-                await message.channel.send(article)
         if message.author == client.user:
             return
         else:
             userprofile = self.handleUserId(message.author.id)
+
+        if message.content == '!whatsnew':
+            await message.channel.send("amount of articles: " + str(userprofile.amountOfNews))
+            articlelist = self.getNews()
+            for article in articlelist:
+                await message.channel.send(article)
+
         if message.content == '!helloworld':
             await message.channel.send(f'Hello, world! {userprofile.id}')
+
         if message.content == '!qt':
             if message.reference != NULL:
                 message = await message.channel.fetch_message(message.reference.message_id)
                 await message.channel.send(self.ruinSentence(message.content))
-        if message.content == '!whatsnew':
-            articlelist = self.getNews()
-            for article in articlelist:
-                await message.channel.send(article)
+
+        if message.content == '!options':
+            await message.channel.send("**OPTION MENU**\n\t**1.** - Add / remove news categories\n\t**2.** - Alter mail size\n\t**3.** - Edit mail time interval\n\nEnter your option")
+            msg = await client.wait_for('message')
+            while msg.author != message.author:
+                msg = await client.wait_for('message')
+            if int(msg.content) in range(1,4):
+                #await message.channel.send(msg.content)
+                if int(msg.content) == 1:
+                    await message.channel.send("FILLER TEXT")
+                    pass
+                elif int(msg.content) == 2:
+                    await message.channel.send("FILLER TEXT")
+                    pass
+                elif int(msg.content == 3):
+                    await message.channel.send("FILLER TEXT")
+                    pass
+
+
+
+#        if message.content == '!whatsnew':
+#            articlelist = self.getNews()
+#            for article in articlelist:
+#                await message.channel.send(article)
+
         if message.content == '!dn':
             await message.channel.send('D33Z NUT5')
 
@@ -56,6 +81,7 @@ class CustomClient(discord.Client):
                 retlist.append(ui.formatArticle(article, i))
 
         return retlist
+
 
     def ruinSentence(self, string):
         string = string.capitalize()
