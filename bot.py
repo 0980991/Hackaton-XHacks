@@ -41,6 +41,43 @@ class CustomClient(discord.Client):
             for article in articlelist:
                 await message.author.send(article)
 
+        if message.content.startswith('!interval '):
+            argument = message.content[10:]
+            if userprofile.setInterval(argument):
+                await message.channel.send("Preference updated!")
+                db.editUser(userprofile)
+            else:
+                await message.channel.send("Invalid input.")
+
+        if message.content.startswith('!mailsize '):
+            argument = message.content[10:]
+            if int(argument) > 0 and int(argument) <= 20:
+                userprofile.setAmountOfNews(int(argument))
+                db.editUser(userprofile)
+                await message.channel.send("News amount updated!")
+            else:
+                await message.channel.send("Invalid input. (1-20)")
+
+
+        if message.content.startswith('!addcategory '):
+            argument = message.content[13:]
+            userprofile.addInterest(argument)
+            db.editUser(userprofile)
+            await message.channel.send("Category added!")
+
+
+        if message.content.startswith('!removecategory '):
+            argument = message.content[16:]
+            userprofile.removeInterest(argument)
+            db.editUser(userprofile)
+            await message.channel.send("Category removed!")
+
+        if message.content == '!listcategories':
+            await message.channel.send(f'{userprofile.interests}')
+
+        if message.content == '!help' or message.content == '!helppaperboy':
+            await message.channel.send(f'**COMMANDS AND GUIDE**```\n\n\t!whatsnew - *Sends a fresh dose of mail to you right away*\n\n\t!automail - *Enables / disables automatic time-interval mail packets*\n\n\t!mailsize [number] - *set the size of your mail packets*\n\n\t!interval [1h / 3h / 6h / 12h / 24h] - *Set the time-interval between automatic mail packets*\n\n\t!listcategories - *list your personal mail categories*\n\n\t!addcategory [category] - *Add a keyword of interest to your category list*\n\n\t!removecategory [category] - *Remove a category from your personal category list*\n\n\t!help - *List the commands to use this bot*\n\n\t!options - *Open up an interactive menu to edit personal settings*```')
+
         if message.content == '!helloworld':
             await message.channel.send(f'Hello, world! {userprofile.id}')
 
