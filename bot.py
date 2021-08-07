@@ -25,21 +25,22 @@ class CustomClient(discord.Client):
                 message = await message.channel.fetch_message(message.reference.message_id)
                 await message.channel.send(self.ruinSentence(message.content))
         if message.content == '!whatsnew':
-            news = self.getNews()
-            for article in news:
+            articlelist = self.getNews()
+            for article in articlelist:
                 await message.channel.send(article)
+        if message.content == '!dn':
+            await message.channel.send('D33Z NUT5')
 
 
     def getNews(self):
-        key = os.getenv('DISCORD')
+        key = os.getenv('NEWSAPI_KEY')
         newsapi = na.NewsApiClient(api_key=key)
-        data = newsapi.get_everything(q='bbc-news', language='en', page_size=5)
+        data = newsapi.get_everything(q='bbc-news', language='en', page_size=2)
 
         retlist = []
         articles = data['articles']
         for i, article in enumerate(articles):
-            retlist.append(f'{i+1}\t{article["title"]}https://www.bbc.com/sport/live/olympics/52501715\n')
-        
+            retlist.append(f'{i+1}\t{article["title"]} {article["url"]}\t\n')
         return retlist
 
     def ruinSentence(self, string):
