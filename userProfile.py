@@ -3,7 +3,7 @@ import os
 
 class userProfile:
     # Only pass ID to create new user, pass everything to load one from json
-    def __init__(self, id, interests=[], interval='24h', amountOfNews=5, receiveAutoMail=False):
+    def __init__(self, id, interests=['news'], interval='24h', amountOfNews=5, receiveAutoMail=False):
         self.id = id
         self.interests = interests
         self.interval = interval
@@ -76,6 +76,7 @@ class userDatabase:
             'amountOfNews': user.amountOfNews,
             'receiveAutoMail': user.receiveAutoMail
         }
+        print(self.jsonRead)
         with open(self.jsonFile, 'w') as outputFile:
             json.dump(self.jsonRead, outputFile)
             outputFile.close()
