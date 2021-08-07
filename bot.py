@@ -2,6 +2,8 @@
 from asyncio.windows_events import NULL
 import os
 
+import random
+
 import discord
 from dotenv import load_dotenv
 
@@ -28,7 +30,8 @@ class CustomClient(discord.Client):
 
         if message.content == '!whatsnew':
             await message.channel.send("amount of articles: " + str(userprofile.amountOfNews))
-            articlelist = self.getNews()
+            articlelist = self.getNews(userprofile.amountOfNews, userprofile.interests, userprofile)
+            await message.channel.send("Your news:")
             for article in articlelist:
                 await message.channel.send(article)
 
@@ -48,7 +51,45 @@ class CustomClient(discord.Client):
             if int(msg.content) in range(1,4):
                 #await message.channel.send(msg.content)
                 if int(msg.content) == 1:
-                    await message.channel.send("FILLER TEXT")
+                    await message.channel.send("**1.** - Add category\n**2.** - Remove category")
+                    msg = await client.wait_for('message')
+                    while msg.author != message.author and int(msg.content) in range(1,3):
+                        msg = await client.wait_for('message')
+                    if int(msg.content) == 1:
+                        # Add category
+                        if len(userprofile.interests) > 0:
+                            await message.channel.send(f'Your categories: {userprofile.interests}')
+                        await message.channel.send("What category would you like to add?")
+                        msg = await client.wait_for('message')
+                        while msg.author != message.author:
+                            msg = await client.wait_for('message')
+                        userprofile.addInterest(msg.content)
+                        db.writeUser(userprofile)
+                        await message.channel.send("Category added!")
+
+                    else:
+                        # Remove category
+                        if len(userprofile.interests) > 0:
+                            await message.channel.send(f'Your categories: {userprofile.interests}')
+                            await message.channel.send(f'Please enter which category you would like to remove')
+                            msg = await client.wait_for('message')
+                            while msg.author != message.author:
+                                msg = await client.wait_for('message')
+                            if msg.content in userprofile.interests:
+                                userprofile.removeInterest(msg.content)
+                                db.writeUser(userprofile)
+                                await message.channel.send(f'Category removed!')
+                            else:
+                                await message.channel.send(f'Category not found.')
+
+
+                        else:
+                            await message.channel.send(f'You have no categories')
+                            return
+
+
+                    
+
                     pass
                 elif int(msg.content) == 2:
                     await message.channel.send("FILLER TEXT")
@@ -70,15 +111,18 @@ class CustomClient(discord.Client):
     def handleUserId(self, id):
         return db.loadUser(id)
 
-    def getNews(self, pagesize, interest):
+    def getNews(self, pagesize, interests, userprofile):
         key = os.getenv('NEWSAPI_KEY')
         newsapi = na.NewsApiClient(api_key=key)
-        data = newsapi.get_everything(q=interest, language='en', page_size=userprofile.amountOfNews)
+        data = []
+        for interest in interests:
+            data.append(newsapi.get_everything(q=interest, language='en', page_size=userprofile.amountOfNews))
 
         retlist = []
-        articles = data['articles']
-        for i, article in enumerate(articles):
-                retlist.append(ui.formatArticle(article, i))
+        articles = data
+        print(articles)
+        for i in range(userprofile.amountOfNews):
+            retlist.append(ui.formatArticle(random.choice(articles)['articles'][i], i))
 
         return retlist
 
