@@ -7,13 +7,7 @@ from dotenv import load_dotenv
 
 import newsapi as na
 
-<<<<<<< Updated upstream
-import userProfile
-
-db = userProfile.userDatabase()
-=======
-import uifunctions as ui
->>>>>>> Stashed changes
+import UIFunctions as ui
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -24,6 +18,10 @@ class CustomClient(discord.Client):
         print(f'{self.guilds}')
 
     async def on_message(self, message):
+        if message.content == '!whatsnew':
+            articlelist = self.getNews()
+            for article in articlelist:
+                await message.channel.send(article)
         if message.author == client.user:
             return
         else:
@@ -49,10 +47,12 @@ class CustomClient(discord.Client):
         newsapi = na.NewsApiClient(api_key=key)
         data = newsapi.get_everything(q='politics', language='en', page_size=5)
 
-
+        retlist = []
         articles = data['articles']
         for i, article in enumerate(articles):
-            ui.formatArticle(article, i)
+                retlist.append(ui.formatArticle(article, i))
+
+        return retlist
 
     def ruinSentence(self, string):
         string = string.capitalize()
