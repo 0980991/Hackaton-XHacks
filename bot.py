@@ -33,7 +33,11 @@ class CustomClient(discord.Client):
             for article in articlelist:
                 await message.author.send(article)
 
-        if message.content.startswith('!interval '):
+        if message.content.startswith('!interval'):
+            if len(message.content) == 9:
+                await message.channel.send(f"Your current interval is: {userprofile.interval}")
+                return
+
             argument = message.content[10:]
             if userprofile.setInterval(argument):
                 await message.channel.send("Preference updated!")
@@ -41,7 +45,11 @@ class CustomClient(discord.Client):
             else:
                 await message.channel.send("Invalid input.")
 
-        if message.content.startswith('!mailsize '):
+        if message.content.startswith('!mailsize'):
+            if len(message.content) == 9:
+                await message.channel.send(f"Your current mail size is: {userprofile.amountOfNews}")
+                return
+
             argument = message.content[10:]
             if int(argument) > 0 and int(argument) <= 20:
                 userprofile.setAmountOfNews(int(argument))
