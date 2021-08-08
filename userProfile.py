@@ -76,7 +76,6 @@ class userDatabase:
             'amountOfNews': user.amountOfNews,
             'receiveAutoMail': user.receiveAutoMail
         }
-        print(self.jsonRead)
         with open(self.jsonFile, 'w') as outputFile:
             json.dump(self.jsonRead, outputFile)
             outputFile.close()

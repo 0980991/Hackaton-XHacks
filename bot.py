@@ -163,7 +163,6 @@ class CustomClient(discord.Client):
     @tasks.loop(seconds=3600.0)
     async def sendMassMail(self):
         currentHour = dt.datetime.now().hour
-        print(currentHour % 12)
         users = db.getAllUsers()
         for user in users:
             userOnDiscord = await self.fetch_user(str(user.id))

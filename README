@@ -1,0 +1,41 @@
+DEMONSTRATION VIDEO: https://www.youtube.com/watch?v=KKsfyrx1an4
+
+SETTING UP YOUR DISCORD KEY
+------------------------------------------------------------------------------------------------------------------------------------
+In order to use the mailman bot, you must first create a .env file within the local folder to save your discord token (key) in the following format:
+
+DISCORD_TOKEN={discord token}  # The default key should be working 
+							   # Add Salared#1601 on Discord for a new key when malfunctioning
+
+
+SETTING UP YOUR NEWS API KEY
+------------------------------------------------------------------------------------------------------------------------------------
+In order to generate a free key to use the news api, go to newsapi.org and create an account to a key. Save this key in the .env file in the following format
+
+NEWSAPI_KEY={newsapi key}
+
+
+RUNNING  THE  BOT
+------------------------------------------------------------------------------------------------------------------------------------
+In order to run the bot, execute the bot.py file using python3
+
+
+ACCESSING USER COMMANDS
+------------------------------------------------------------------------------------------------------------------------------------
+    !whatsnew - Sends a fresh dose of mail to you right away
+
+    !automail - Enables / disables automatic time-interval mail packets
+
+    !mailsize [number] - set the size of your mail packets
+
+    !interval [1h / 3h / 6h / 12h / 24h] - Set the time-interval between automatic mail packets
+
+    !listcategories - list your personal mail categories
+
+    !addcategory [category] - Add a keyword of interest to your category list
+
+    !removecategory [category] - Remove a category from your personal category list
+
+    !help - List the commands to use this bot
+
+    !options - Open up an interactive menu to edit personal settings
