@@ -81,10 +81,10 @@ class CustomClient(discord.Client):
         if message.content == '!helloworld':
             await message.channel.send(f'Hello, world! {userprofile.id}')
 
-        if message.content == '!qt':
-            if message.reference != NULL:
-                message = await message.channel.fetch_message(message.reference.message_id)
-                await message.channel.send(self.ruinSentence(message.content))
+        # if message.content == '!qt':
+        #     if message.reference != NULL:
+        #         message = await message.channel.fetch_message(message.reference.message_id)
+        #         await message.channel.send(self.ruinSentence(message.content))
 
         if message.content == '!options':
             await message.channel.send("**OPTION MENU**\n\t**1.** - Add / remove news categories\n\t**2.** - Alter mail size\n\t**3.** - Edit mail time interval\n\nEnter your option")
